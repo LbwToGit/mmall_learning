@@ -37,6 +37,8 @@ public class ServerResponse<T> implements Serializable {
 
     @JsonIgnore
     //使之不在json序列化结果当中
+    //是通过createBySuccess 方法初始化的对象
+    //其状态码为  0
     public boolean isSuccess(){
 
         return this.status == ResponseCode.SUCCESS.getCode();

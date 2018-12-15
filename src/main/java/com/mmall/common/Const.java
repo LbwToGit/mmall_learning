@@ -25,7 +25,7 @@ public class Const {
         String LIMIT_NUM_FAIL = "LIMIT_NUM_FAIL";
         String LIMIT_NUM_SUCCESS = "LIMIT_NUM_SUCCESS";
     }
-
+    //内部接口类  对用户实现分组
     public interface Role{
         int ROLE_CUSTOMER = 0; //普通用户
         int ROLE_ADMIN = 1;//管理员
