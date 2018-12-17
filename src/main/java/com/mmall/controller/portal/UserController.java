@@ -5,6 +5,7 @@ import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
+import com.mmall.util.MD5Util;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,7 +39,12 @@ public class UserController {
         return response;
     }
 
-    @RequestMapping(value = "logout.do",method = RequestMethod.GET)
+ /*   public static void main(String[] args) {
+        String password="123456";
+        String md5password=MD5Util.MD5EncodeUtf8(password);
+        System.out.println(md5password);
+    }*/
+    @RequestMapping(value = "logout.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> logout(HttpSession session){
         session.removeAttribute(Const.CURRENT_USER);
@@ -46,21 +52,21 @@ public class UserController {
     }
 
     //2.注册 /user/register.do
-    @RequestMapping(value = "register.do",method = RequestMethod.GET)
+    @RequestMapping(value = "register.do",method = RequestMethod.POST)
     @ResponseBody
     public  ServerResponse<String> register(User user){
         return iUserService.register(user);
     }
 
     //校验 用户名和邮箱是否存在
-    @RequestMapping(value = "check_valid.do",method = RequestMethod.GET)
+    @RequestMapping(value = "check_valid.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> checkValid(String str,String type){
         return iUserService.checkValid(str,type);
     }
 
     //4.获取登录用户信息 /user/get_user_info.do
-    @RequestMapping(value = "get_user_info.do",method = RequestMethod.GET)
+    @RequestMapping(value = "get_user_info.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> getUserInfo(HttpSession session){
         User user=(User) session.getAttribute(Const.CURRENT_USER);
@@ -71,14 +77,14 @@ public class UserController {
     }
 
     //5.忘记密码 /user/forget_get_question.do
-    @RequestMapping(value = "forget_get_question.do",method = RequestMethod.GET)
+    @RequestMapping(value = "forget_get_question.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> forgetGetQuestion(String username){
         return iUserService.selectQuestion(username);
     }
 
     //6.提交问题答案 /user/forget_check_answer.do
-    @RequestMapping(value = "forget_check_answer.do",method = RequestMethod.GET)
+    @RequestMapping(value = "forget_check_answer.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> forgetCheckAnswer(String username, String question,String answer){
         return iUserService.checkAnswer(username,question,answer);
@@ -90,7 +96,7 @@ public class UserController {
     }
 
     //8.登录中状态重置密码 /user/reset_password.do
-    @RequestMapping(value = "reset_password.do",method = RequestMethod.GET)
+    @RequestMapping(value = "reset_password.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> resetPassword(HttpSession session,String passwordOld,String passwordNew){
             User user=(User) session.getAttribute(Const.CURRENT_USER);
@@ -101,7 +107,7 @@ public class UserController {
     }
 
     //9.登录状态更新个人信息 /user/update_information.do
-    @RequestMapping(value = "update_information.do",method = RequestMethod.GET)
+    @RequestMapping(value = "update_information.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> updateInformation(HttpSession session,User user){
         User currentUser=(User) session.getAttribute(Const.CURRENT_USER);
@@ -117,7 +123,7 @@ public class UserController {
         return response;
     }
     //10.获取当前登录用户的详细信息，并强制登录 /user/get_information.do
-    @RequestMapping(value = "get_information.do",method = RequestMethod.GET)
+    @RequestMapping(value = "get_information.do",method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> getInformation(HttpSession session){
         User user=(User) session.getAttribute(Const.CURRENT_USER);

@@ -34,7 +34,7 @@ public class UserServiceImpl implements IUserService {
         }
         user.setPassword(StringUtils.EMPTY); //登录成功 将密码置空
 
-        return ServerResponse.createBySuccess("登陆成功",user);
+        return ServerResponse.createBySuccess("登陆成功",user); //将用户保存至泛型
     }
 
     public ServerResponse<String> register(User user){
