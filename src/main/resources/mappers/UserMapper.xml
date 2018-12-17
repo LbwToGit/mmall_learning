@@ -185,4 +185,16 @@
     set  password=#{passwordNew},update_time=now()
     where username=#{username}
   </update>
+    <select id="checkPassword" parameterType="map" resultType="int">
+        select
+        count(1)
+        from mmall_user
+        where password=#{password}
+        and id=#{userId}
+    </select>
+    <select id="checkEmailByUserId" resultType="int" parameterType="map">
+        select count(1) from mmall_user
+        where email=#{email}
+        and id!=#{userId}   --表示其他用户已经占用此email
+    </select>
 </mapper>

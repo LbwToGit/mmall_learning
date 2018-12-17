@@ -1,6 +1,7 @@
 package com.mmall.controller.portal;
 
 import com.mmall.common.Const;
+import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
@@ -87,4 +88,56 @@ public class UserController {
     public ServerResponse<String> forgetResetPassword(String username,String passwordNew,String forgetToken){
         return iUserService.forgetResetPassword(username,passwordNew,forgetToken);
     }
+
+    //8.登录中状态重置密码 /user/reset_password.do
+    @RequestMapping(value = "reset_password.do",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<String> resetPassword(HttpSession session,String passwordOld,String passwordNew){
+            User user=(User) session.getAttribute(Const.CURRENT_USER);
+            if (user==null){
+                return ServerResponse.createByErrorMessage("用户未登录");
+            }
+            return iUserService.resetPassword(passwordOld,passwordNew,user);
+    }
+
+    //9.登录状态更新个人信息 /user/update_information.do
+    @RequestMapping(value = "update_information.do",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<User> updateInformation(HttpSession session,User user){
+        User currentUser=(User) session.getAttribute(Const.CURRENT_USER);
+        if (currentUser==null){
+            return ServerResponse.createByErrorMessage("用户未登录");
+        }
+        user.setId(currentUser.getId()); //复制登录用户ID
+        user.setUsername(currentUser.getUsername());
+        ServerResponse<User> response= iUserService.updateInformation(user);
+        if (response.isSuccess()){
+            session.setAttribute(Const.CURRENT_USER,response.getData());
+        }
+        return response;
+    }
+    //10.获取当前登录用户的详细信息，并强制登录 /user/get_information.do
+    @RequestMapping(value = "get_information.do",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<User> getInformation(HttpSession session){
+        User user=(User) session.getAttribute(Const.CURRENT_USER);
+        if (user==null){
+            return  ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录 status=10");
+        }
+        return iUserService.getInformation(user.getId());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
