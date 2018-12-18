@@ -17,6 +17,8 @@ public class PropertiesUtil {
 
     private static Properties props;
 
+    //静态代码块
+    //实现本地配置文件的读写
     static {
         String fileName = "mmall.properties";
         props = new Properties();
@@ -28,7 +30,7 @@ public class PropertiesUtil {
     }
 
     public static String getProperty(String key){
-        String value = props.getProperty(key.trim());
+        String value = props.getProperty(key.trim()); //获取key对应的value
         if(StringUtils.isBlank(value)){
             return null;
         }
