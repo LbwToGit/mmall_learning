@@ -1,5 +1,18 @@
-<html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<html >
 <body>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <h2>Hello World!</h2>
+springmvc文件上传
+<form name="form2" action="/manage/product/upload.do" method="post"  enctype="multipart/form-data">
+    <input type="file" name="upload_file">
+    <input type="submit" value="springmvc文件上传"/>
+</form>
+
+富文本编辑器文件上传
+<form name="form2" action="/manage/product/richtext_img_upload.do" method="post"  enctype="multipart/form-data">
+    <input type="file" name="upload_file">
+    <input type="submit" value="富文本编辑器文件上传"/>
+</form>
 </body>
 </html>

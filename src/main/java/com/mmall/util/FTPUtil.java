@@ -34,7 +34,13 @@ public class FTPUtil {
         return result;
     }
 
-
+    /**
+     *
+     * @param remotePath 切换的目录  为空 就是当前目录
+     * @param fileList
+     * @return
+     * @throws IOException
+     */
     private boolean uploadFile(String remotePath,List<File> fileList) throws IOException {
         boolean uploaded = true;
         FileInputStream fis = null;
@@ -42,13 +48,13 @@ public class FTPUtil {
         if(connectServer(this.ip,this.port,this.user,this.pwd)){
             try {
                 ftpClient.changeWorkingDirectory(remotePath);
-                ftpClient.setBufferSize(1024);
-                ftpClient.setControlEncoding("UTF-8");
-                ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
-                ftpClient.enterLocalPassiveMode();
+                ftpClient.setBufferSize(1024); //设置缓存区
+                ftpClient.setControlEncoding("UTF-8"); //设置编码
+                ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);  //设置文件类型为二进制文件
+                ftpClient.enterLocalPassiveMode();  //被动模式开启
                 for(File fileItem : fileList){
                     fis = new FileInputStream(fileItem);
-                    ftpClient.storeFile(fileItem.getName(),fis);
+                    ftpClient.storeFile(fileItem.getName(),fis);  //FTP存储文件
                 }
 
             } catch (IOException e) {

@@ -15,4 +15,9 @@ public interface IProductService {
     ServerResponse<PageInfo> getProductList(int pageNum, int pageSize);
 
     ServerResponse<PageInfo> sreachProduct(String productName,Integer productId,int pageNum,int pageSize);
+
+    //todo  用户产品接口
+    ServerResponse<ProductDetailVo> getProductDetail(Integer productId);
+
+    ServerResponse<PageInfo> getProductByKeywordCategoryId(String keyword,Integer categoryId,String orderBy,int pageNum,int pageSize);
 }

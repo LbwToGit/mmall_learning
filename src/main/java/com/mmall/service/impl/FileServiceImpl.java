@@ -29,7 +29,7 @@ public class FileServiceImpl implements IFileService {
             fileDir.setWritable(true);
             fileDir.mkdirs();
         }
-        File targetFile=new File(fileExtensionName,path);
+        File targetFile=new File(path,uploadFileName);  //需要上传的文件
         try {
             file.transferTo(targetFile);
             //文件已经上传了
