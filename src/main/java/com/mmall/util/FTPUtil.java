@@ -65,6 +65,8 @@ public class FTPUtil {
                 fis.close();
                 ftpClient.disconnect();
             }
+        }else {
+            uploaded=false;
         }
         return uploaded;
     }
