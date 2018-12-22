@@ -238,6 +238,8 @@
       <artifactId>hamcrest-core</artifactId>
       <version>1.3</version>
     </dependency>
+
+
     <!-- mybatis-generator-core 反向生成java代码-->
     <dependency>
       <groupId>org.mybatis.generator</groupId>
@@ -274,7 +276,7 @@
           <source>1.7</source>
           <target>1.7</target>
           <encoding>UTF-8</encoding>
-          <compilerArguments>
+          <compilerArguments>   <!--编译-->
             <extdirs>${project.basedir}/src/main/webapp/WEB-INF/lib</extdirs>
           </compilerArguments>
         </configuration>
