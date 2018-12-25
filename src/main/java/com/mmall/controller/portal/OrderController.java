@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,126 @@ public class OrderController {
 
     @Autowired
     private IOrderService iOrderService;
+
+    //=====================================================订单模块=========================================
+
+    //1.创建订单
+    //
+    ///order/create.do
+    @RequestMapping("create.do")
+    @ResponseBody
+    public ServerResponse create(HttpSession session, Integer shippingId){
+        User user=(User) session.getAttribute(Const.CURRENT_USER);
+        if (user ==null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+
+        return iOrderService.createOrder(user.getId(),shippingId);
+    }
+
+    //5.取消订单
+    //
+    //http://localhost:8080/order/cancel.do?orderNo=1480515829406
+    //
+    ///order/cancel.do
+    @RequestMapping("cancel.do")
+    @ResponseBody
+    public ServerResponse cancel(HttpSession session, Long orderNo){
+        User user=(User) session.getAttribute(Const.CURRENT_USER);
+        if (user ==null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+
+        return iOrderService.cancel(user.getId(),orderNo);
+    }
+
+    //2.获取订单的商品信息(已经选中的)
+    //
+    ///order/get_order_cart_product.do
+    @RequestMapping("get_order_cart_product.do")
+    @ResponseBody
+    public ServerResponse getOrderCartProduct(HttpSession session){
+        User user=(User) session.getAttribute(Const.CURRENT_USER);
+        if (user ==null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+
+        return iOrderService.getOrderCartProduct(user.getId());
+    }
+
+    //4.订单详情detail
+    //
+    //http://localhost:8080/order/detail.do?orderNo=1480515829406
+    //
+    ///order/detail.do
+    @RequestMapping("detail.do")
+    @ResponseBody
+    public ServerResponse detail(HttpSession session,Long orderNo){
+        User user=(User) session.getAttribute(Const.CURRENT_USER);
+        if (user ==null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+
+        return  iOrderService.getOrderDetail(user.getId(),orderNo);
+    }
+
+    //3.订单List
+    //
+    //http://localhost:8080/order/list.do?pageSize=3
+    //
+    ///order/list.do
+    @RequestMapping("list.do")
+    @ResponseBody
+    public ServerResponse list(HttpSession session, @RequestParam(value = "pageNum",defaultValue = "1") int pageNum, @RequestParam(value = "pageSize",defaultValue = "10")int pageSize){
+        User user=(User) session.getAttribute(Const.CURRENT_USER);
+        if (user ==null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
+        }
+
+        return  iOrderService.getList(user.getId(),pageNum,pageSize);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //=====================================================支付模块=========================================
     //1.支付
     //
     ///order/pay.do
@@ -59,11 +180,13 @@ public class OrderController {
         Map requesrParams=request.getParameterMap();
         for (Iterator iterator=requesrParams.keySet().iterator();iterator.hasNext();){
             String name=(String) iterator.next();
+            System.out.println("name:  ========================>"+name);
             String[] values=(String[]) requesrParams.get(name);
             String valuesStr="";
             for (int i=0;i<values.length;i++){
                 valuesStr=i==(values.length-1)?valuesStr+values[i]:valuesStr+values[i]+",";
             }
+            System.out.println("valuesStr: =======================>"+valuesStr);
             parms.put(name,valuesStr);
         }
         logger.info("支付宝回调，sign:{},trade_status:{},参数:{}",parms.get("sign"),parms.get("trade_status"),parms.toString());
