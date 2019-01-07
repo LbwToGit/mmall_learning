@@ -5,8 +5,8 @@ import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
-import com.mmall.util.MD5Util;
-import org.apache.commons.lang3.StringUtils;
+import com.mmall.util.JsonUtil;
+import com.mmall.util.RedisPoolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +34,10 @@ public class UserController {
         ServerResponse<User> response=iUserService.login(username,password);
         if (response.isSuccess()){
             //登录成功  将登录对象存入session
-            session.setAttribute(Const.CURRENT_USER,response.getData());
+            //session.setAttribute(Const.CURRENT_USER,response.getData());
+
+            RedisPoolUtil.setEx(session.getId(), JsonUtil.obj2String(response.getData()),Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
+
         }
         return response;
     }
