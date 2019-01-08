@@ -5,6 +5,7 @@ import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
+import com.mmall.util.CookieUtil;
 import com.mmall.util.JsonUtil;
 import com.mmall.util.RedisPoolUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -29,17 +32,20 @@ public class UserController {
      */
     @RequestMapping(value = "login.do",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<User> login(String username, String password, HttpSession  session){
+    public ServerResponse<User> login(String username, String password, HttpSession  session, HttpServletResponse response, HttpServletRequest request){
         //service --> mybatis --->dao
-        ServerResponse<User> response=iUserService.login(username,password);
-        if (response.isSuccess()){
+        ServerResponse<User> userServerResponse=iUserService.login(username,password);
+        if (userServerResponse.isSuccess()){
             //登录成功  将登录对象存入session
             //session.setAttribute(Const.CURRENT_USER,response.getData());
-
-            RedisPoolUtil.setEx(session.getId(), JsonUtil.obj2String(response.getData()),Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
+            //420B36A7040E8504A868FEE814F4C170
+            CookieUtil.writeLoginToken(response,session.getId());
+            CookieUtil.readLoginToken(request);
+            CookieUtil.delLoginToken(request,response);
+            RedisPoolUtil.setEx(session.getId(), JsonUtil.obj2String(userServerResponse.getData()),Const.RedisCacheExtime.REDIS_SESSION_EXTIME);
 
         }
-        return response;
+        return userServerResponse;
     }
 
  /*   public static void main(String[] args) {
