@@ -53,7 +53,7 @@ public class RedisPool {
     }
 
 
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         Jedis jedis = pool.getResource();
         jedis.set("geelykey","geelyvalue");
         returnResource(jedis);
@@ -62,6 +62,6 @@ public class RedisPool {
         System.out.println("program is end");
 
 
-    }
+    }*/
 
 }

@@ -75,7 +75,7 @@ public class RedisShardedPool {
     }
 
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         ShardedJedis jedis = pool.getResource();
 
         for(int i =0;i<10;i++){
@@ -87,5 +87,5 @@ public class RedisShardedPool {
         System.out.println("program is end");
 
 
-    }
+    }*/
 }

@@ -126,7 +126,7 @@ public class RedisShardedPoolUtil {
     }
 
 
-    public static void main(String[] args) {
+/*    public static void main(String[] args) {
         ShardedJedis jedis = RedisShardedPool.getJedis();
 
         RedisPoolUtil.set("keyTest","value");
@@ -146,7 +146,7 @@ public class RedisShardedPoolUtil {
         System.out.println("end");
 
 
-    }
+    }*/
 
 
 
