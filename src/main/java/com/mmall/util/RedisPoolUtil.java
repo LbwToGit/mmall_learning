@@ -7,6 +7,7 @@ import redis.clients.jedis.Jedis;
 
 /**
  * Created by geely
+ * redis 连接池
  */
 @Slf4j
 public class RedisPoolUtil {

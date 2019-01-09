@@ -6,7 +6,7 @@ import com.mmall.dao.UserMapper;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
 import com.mmall.util.MD5Util;
-import com.mmall.util.RedisPoolUtil;
+import com.mmall.util.RedisShardedPoolUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class UserServiceImpl implements IUserService {
         if (resultCount==0){
             return ServerResponse.createByErrorMessage("用户名不存在");
         }
-        System.out.println("=======================================");
+        //System.out.println("=======================================");
         // TODO 密码登录MD5
         String md5Password=MD5Util.MD5EncodeUtf8(password);
         User user=userMapper.selectLogin(username,md5Password);
@@ -98,7 +98,7 @@ public class UserServiceImpl implements IUserService {
         if (resultCount>0){
             //用户问题和用户答案是这个用户的并且答案是对的
             String forgetToken=UUID.randomUUID().toString();
-            RedisPoolUtil.setEx(Const.TOKEN_PREFIX+username,forgetToken,60*60*12);
+            RedisShardedPoolUtil.setEx(Const.TOKEN_PREFIX+username,forgetToken,60*60*12);
             return ServerResponse.createBySuccess(forgetToken);
         }
         return ServerResponse.createByErrorMessage("问题答案错误");
@@ -114,7 +114,7 @@ public class UserServiceImpl implements IUserService {
             //用户不存在
             return ServerResponse.createByErrorMessage("用户不存在");
         }
-        String token = RedisPoolUtil.get(Const.TOKEN_PREFIX+username); //获取本地缓存中的 token
+        String token = RedisShardedPoolUtil.get(Const.TOKEN_PREFIX+username); //获取本地缓存中的 token
 
         if(org.apache.commons.lang3.StringUtils.isBlank(token)){
             return ServerResponse.createByErrorMessage("token无效或者过期");

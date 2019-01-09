@@ -6,6 +6,7 @@ import redis.clients.jedis.ShardedJedis;
 
 /**
  * Created by geely
+ * redis 分片连接池
  */
 @Slf4j
 public class RedisShardedPoolUtil {
