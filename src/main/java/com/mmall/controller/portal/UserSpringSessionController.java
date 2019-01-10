@@ -26,7 +26,7 @@ public class UserSpringSessionController {
      * @param session
      * @return
      */
-    @RequestMapping(value = "login.do",method = RequestMethod.POST)
+    @RequestMapping(value = "login.do",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<User> login(String username, String password, HttpSession  session, HttpServletResponse response){
         //service --> mybatis --->dao
@@ -46,7 +46,7 @@ public class UserSpringSessionController {
         String md5password=MD5Util.MD5EncodeUtf8(password);
         System.out.println(md5password);
     }*/
-    @RequestMapping(value = "logout.do",method = RequestMethod.POST)
+    @RequestMapping(value = "logout.do",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<String> logout(HttpServletRequest request,HttpServletResponse response,HttpSession  session){
 
@@ -60,7 +60,7 @@ public class UserSpringSessionController {
 
 
     //4.获取登录用户信息 /user/get_user_info.do
-    @RequestMapping(value = "get_user_info.do",method = RequestMethod.POST)
+    @RequestMapping(value = "get_user_info.do",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<User> getUserInfo(HttpServletRequest request,HttpSession  session){
 
