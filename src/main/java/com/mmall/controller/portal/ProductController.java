@@ -1,53 +1,150 @@
 package com.mmall.controller.portal;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.google.common.collect.Lists;
-import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
-import com.mmall.dao.CategoryMapper;
-import com.mmall.pojo.Category;
-import com.mmall.service.ICategoryService;
 import com.mmall.service.IProductService;
 import com.mmall.vo.ProductDetailVo;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/product/")
 public class ProductController {
 
+
     @Autowired
     private IProductService iProductService;
 
 
-        //2.产品detail
-    //
-    //  /product/detail.do
+
     @RequestMapping("detail.do")
     @ResponseBody
     public ServerResponse<ProductDetailVo> detail(Integer productId){
         return iProductService.getProductDetail(productId);
     }
 
-    //1.产品搜索及动态排序List
-    //
-    ///product/list.do
+
+    @RequestMapping(value = "/{productId}", method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<ProductDetailVo> detailRESTful(@PathVariable Integer productId){
+        return iProductService.getProductDetail(productId);
+    }
+
     @RequestMapping("list.do")
     @ResponseBody
-    public ServerResponse<PageInfo> list(@RequestParam(value = "keyword",
-            required = false) String keyword, @RequestParam(value = "categoryId",
-            required = false)Integer categoryId, @RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
-                                         @RequestParam(value = "pageNum",defaultValue = "10")int pageSiz,@RequestParam(value = "orderBy",defaultValue = "")String orderBy){
+    public ServerResponse<PageInfo> list(@RequestParam(value = "keyword",required = false)String keyword,
+                                         @RequestParam(value = "categoryId",required = false)Integer categoryId,
+                                         @RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
+                                         @RequestParam(value = "pageSize",defaultValue = "10") int pageSize,
+                                         @RequestParam(value = "orderBy",defaultValue = "") String orderBy){
+        return iProductService.getProductByKeywordCategoryId(keyword,categoryId,orderBy,pageNum,pageSize);
+    }
 
-                return iProductService.getProductByKeywordCategoryId(keyword,categoryId,orderBy,pageNum,pageSiz);
+
+    //http://www.happymmall.com/product/手机/100012/1/10/price_asc
+    @RequestMapping(value = "/{keyword}/{categoryId}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<PageInfo> listRESTful(@PathVariable(value = "keyword")String keyword,
+                                                @PathVariable(value = "categoryId")Integer categoryId,
+                                                @PathVariable(value = "pageNum") Integer pageNum,
+                                                @PathVariable(value = "pageSize") Integer pageSize,
+                                                @PathVariable(value = "orderBy") String orderBy){
+        if(pageNum == null){
+            pageNum = 1;
+        }
+        if(pageSize == null){
+            pageSize = 10;
+        }
+        if(org.apache.commons.lang.StringUtils.isBlank(orderBy)){
+            orderBy = "price_asc";
+        }
+
+        return iProductService.getProductByKeywordCategoryId(keyword,categoryId,orderBy,pageNum,pageSize);
+    }
+
+
+    //    http://www.happymmall.com/product/100012/1/10/price_asc
+    @RequestMapping(value = "/{categoryId}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<PageInfo> listRESTfulBadcase(@PathVariable(value = "categoryId")Integer categoryId,
+                                                       @PathVariable(value = "pageNum") Integer pageNum,
+                                                       @PathVariable(value = "pageSize") Integer pageSize,
+                                                       @PathVariable(value = "orderBy") String orderBy){
+        if(pageNum == null){
+            pageNum = 1;
+        }
+        if(pageSize == null){
+            pageSize = 10;
+        }
+        if(org.apache.commons.lang.StringUtils.isBlank(orderBy)){
+            orderBy = "price_asc";
+        }
+
+        return iProductService.getProductByKeywordCategoryId("",categoryId,orderBy,pageNum,pageSize);
+    }
+
+
+    @RequestMapping(value = "/{keyword}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<PageInfo> listRESTfulBadcase(@PathVariable(value = "keyword")String keyword,
+                                                       @PathVariable(value = "pageNum") Integer pageNum,
+                                                       @PathVariable(value = "pageSize") Integer pageSize,
+                                                       @PathVariable(value = "orderBy") String orderBy){
+        if(pageNum == null){
+            pageNum = 1;
+        }
+        if(pageSize == null){
+            pageSize = 10;
+        }
+        if(org.apache.commons.lang.StringUtils.isBlank(orderBy)){
+            orderBy = "price_asc";
+        }
+
+        return iProductService.getProductByKeywordCategoryId(keyword,null,orderBy,pageNum,pageSize);
+    }
+
+
+    //http://www.happymmall.com/product/keyword/手机/1/10/price_asc
+    @RequestMapping(value = "/keyword/{keyword}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<PageInfo> listRESTful(@PathVariable(value = "keyword")String keyword,
+                                                @PathVariable(value = "pageNum") Integer pageNum,
+                                                @PathVariable(value = "pageSize") Integer pageSize,
+                                                @PathVariable(value = "orderBy") String orderBy){
+        if(pageNum == null){
+            pageNum = 1;
+        }
+        if(pageSize == null){
+            pageSize = 10;
+        }
+        if(org.apache.commons.lang.StringUtils.isBlank(orderBy)){
+            orderBy = "price_asc";
+        }
+
+        return iProductService.getProductByKeywordCategoryId(keyword,null,orderBy,pageNum,pageSize);
+
+    }
+
+
+    //http://www.happymmall.com/product/category/100012/1/10/price_asc
+    @RequestMapping(value = "/category/{categoryId}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<PageInfo> listRESTful(@PathVariable(value = "categoryId")Integer categoryId,
+                                                @PathVariable(value = "pageNum") Integer pageNum,
+                                                @PathVariable(value = "pageSize") Integer pageSize,
+                                                @PathVariable(value = "orderBy") String orderBy){
+        if(pageNum == null){
+            pageNum = 1;
+        }
+        if(pageSize == null){
+            pageSize = 10;
+        }
+        if(org.apache.commons.lang.StringUtils.isBlank(orderBy)){
+            orderBy = "price_asc";
+        }
+
+        return iProductService.getProductByKeywordCategoryId("",categoryId,orderBy,pageNum,pageSize);
     }
 
 }

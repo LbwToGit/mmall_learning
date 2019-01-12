@@ -15,15 +15,14 @@ public class Const {
     public static final String USERNAME = "username";
     public static final String TOKEN_PREFIX = "token_";
 
-    public interface RedisCacheExtime{
-        int REDIS_SESSION_EXTIME=60*30; //30分钟
-    }
 
+    public interface RedisCacheExtime{
+        int REDIS_SESSION_EXTIME = 60 * 30;//30分钟
+    }
     public interface ProductListOrderBy{
         Set<String> PRICE_ASC_DESC = Sets.newHashSet("price_desc","price_asc");
     }
 
-    //购物车模块
     public interface Cart{
         int CHECKED = 1;//即购物车选中状态
         int UN_CHECKED = 0;//购物车中未选中状态
@@ -31,7 +30,7 @@ public class Const {
         String LIMIT_NUM_FAIL = "LIMIT_NUM_FAIL";
         String LIMIT_NUM_SUCCESS = "LIMIT_NUM_SUCCESS";
     }
-    //内部接口类  对用户实现分组
+
     public interface Role{
         int ROLE_CUSTOMER = 0; //普通用户
         int ROLE_ADMIN = 1;//管理员
@@ -86,7 +85,7 @@ public class Const {
                     return orderStatusEnum;
                 }
             }
-            throw new RuntimeException("没有找到对应的枚举");
+            throw new RuntimeException("么有找到对应的枚举");
         }
     }
     public interface  AlipayCallback{
@@ -146,6 +145,10 @@ public class Const {
             throw new RuntimeException("么有找到对应的枚举");
         }
 
+    }
+
+    public interface  REDIS_LOCK{
+        String CLOSE_ORDER_TASK_LOCK = "CLOSE_ORDER_TASK_LOCK";//关闭订单的分布式锁
     }
 
 
