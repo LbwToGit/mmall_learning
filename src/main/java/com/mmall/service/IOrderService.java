@@ -33,7 +33,7 @@ public interface IOrderService {
 
 
     //hour个小时内未付款的订单，进行关闭
-    void closerOrder(int hour);
+    void closeOrder(int hour);
 
 
 }
